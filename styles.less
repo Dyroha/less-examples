@@ -1,0 +1,71 @@
+//variables
+@width: @height * 2;
+@height: 20em;
+@background-color: #cdd;
+@content-color: #89a;
+@text-color: #122;
+@border-color: #622;
+
+@text-lighter: lighten(@text-color, 30%);
+@text-darker: darken(@text-color, 30%);
+
+@aspect-border-radius: 10% 20%;
+
+//nesting
+html {
+    display: block;
+    padding: 0;
+
+    body {
+        background-color: @background-color;
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        color: @text-color;
+    }
+}
+
+//mixins - creating rule sets to be used in components
+.aspect-bordered {
+    border: dashed @border-color 5px;
+    border-top-left-radius: @aspect-border-radius;
+    border-top-right-radius: @aspect-border-radius;
+    border-bottom-left-radius: @aspect-border-radius;
+}
+
+.flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-div() {
+    content: attr(div);
+}
+
+.main {
+    width: @width;
+    height: @height;
+    background-color: @content-color;
+    //mixins
+    .aspect-bordered();
+    .flex();
+
+    //pseudo-class nesting
+    &:hover {
+        @darker-content-color: darken(@content-color, 50%);
+        background-color: @darker-content-color;
+        color: contrast(@darker-content-color, @text-lighter, @text-darker);
+    }
+
+    //pseudo-element nesting
+    &::after {
+        .content-div();
+        .aspect-bordered();
+        @content-color: @background-color;
+        background-color: @content-color;
+        @modifier: 0.2;
+        width: @width * @modifier;
+        height: @height * @modifier;
+    }
+}
